@@ -8,29 +8,45 @@ let wrongAnswers = []
 
 let questionList = [
     {
-        title: "Сколько будет 2+2",
-        subtitle: "В этом вопросе вам предстоит решить пример",
-        answers: ["log(2)16", "cos(2п/4)", "(x^2)-4x+16", "f'(5x+4)"],
-        rightAnswer: 0
+        title: "В каком году произошла Победа в Великой Отечественной войне?",
+        subtitle: "В этом вопросе вам предстоит ответить на вопрос",
+        answers: ["1945", "1946", "1935", "1939"],
+        rightAnswer: 0,
+        imagePath: "img/pictures/image copy 2.png",
+        answerType: 0
     },
     {
-        title: "Что из всего этого союз",
-        subtitle: "В этом вопросе вам предстоит найти союз из русского языка",
-        answers: ["один", "мы", "да", "как"],
-        rightAnswer: 2
+        title: "Какой город называют городом-героем за его оборону во время войны?",
+        subtitle: "В этом вопросе вам предстоит ответить на вопрос",
+        answers: ["Техас", "Ленинград", "Сталинград", "Москва"],
+        rightAnswer: 2,
+        imagePath: "img/pictures/image copy 3.png",
+        answerType: 0
     },
     {
-        title: "Что такое брахиалис",
-        subtitle: "В этом вопросе вам предстоит найти правильный ответ",
-        answers: ["Горло", "Деньги северной Европы", "Вид конденсатора", "Плечо"],
-        rightAnswer: 3
+        title: "Какой символ используется в России для памяти о павших воинов?",
+        subtitle: "В этом вопросе вам предстоит ответить на вопрос",
+        answers: ["Звезды на полу", "Стена", "Меч в камне", "Вечный огонь"],
+        rightAnswer: 3,
+        imagePath: "img/pictures/image copy 4.png",
+        answerType: 0
     },
     {
-        title: "Какой стандартный вид имеет локальный айпи адресс",
-        subtitle: "В этом вопросе вам предстоит дать ответ",
-        answers: ["1.1.1.1", "168.192.0.1", "localhost", "192.168.0.0"],
-        rightAnswer: 3
+        title: "Какая дата отмечается как День Памяти и скорби в России?",
+        subtitle: "В этом вопросе вам предстоит ответить на вопрос",
+        answers: ["22 июля", "31 августа", "22 марта", "22 июня"],
+        rightAnswer: 3,
+        imagePath: "img/pictures/image copy.png",
+        answerType: 0
+    },
+    {
+        title: "Какой марш стал гимном Победы?",
+        subtitle: "Введите название марша",
+        rightAnswer: "Священная война",
+        imagePath: "img/pictures/image.png",
+        answerType: 1
     }
+
 ]
 
 function highliteQuestion(questionID, color, symbol) {
@@ -43,14 +59,31 @@ function highliteQuestion(questionID, color, symbol) {
     });
 }
 
-function setQuestion(title, subtitle, answers) {
+function setQuestion(title, subtitle, answers, type, image) {
     questionInput.innerHTML = ``
-    answers.forEach(element => {
+
+    if(image != undefined){
         questionInput.innerHTML +=
-            `
-        <div class="input_button">`+ element + `</div>
         `
-    });
+        <img src="`+image+`" alt="" class="question__image">
+        `
+    }
+
+    if(type == 0){
+        answers.forEach(element => {
+            questionInput.innerHTML +=
+                `
+            <div class="input_button button">`+ element + `</div>
+            `
+        });
+    }else if(type == 1){
+        questionInput.innerHTML +=
+        `
+        <input type="text" class="input_text" placeholder="Впишите сюда ваш ответ">
+        <div class="submit_button button">Ответить</div>
+        `
+    }
+    console.log(image);
 
     questionTitle.textContent = title
     questionSubtitle.textContent = subtitle
@@ -73,30 +106,44 @@ function initQuestions(questionList) {
 }
 
 function addWrongQuestions(question, chosen) {
-    document.querySelector(".question_holder").innerHTML +=
-        `                
-    <div class="question__element wrong">
-        <div class="question_title_holder">
-            <span class="question_title" id="questionTitle">`+ question.title + `</span>
-            <span class="question_subtitle" id="questionSubtitle">`+ question.subtitle + `</span>
+    if(question.answerType == 0){
+        document.querySelector(".question_holder").innerHTML +=
+            `                
+        <div class="question__element wrong">
+            <div class="question_title_holder">
+                <span class="question_title" id="questionTitle">`+ question.title + `</span>
+                <span class="question_subtitle" id="questionSubtitle">`+ question.subtitle + `</span>
+            </div>
+            <div class="question_input" id="questionInput">
+                <div class="input_button button">`+ question.answers[0] + `</div>
+                <div class="input_button button">`+ question.answers[1] + `</div>
+                <div class="input_button button">`+ question.answers[2] + `</div>
+                <div class="input_button button">`+ question.answers[3] + `</div>
+            </div>
         </div>
-        <div class="question_input" id="questionInput">
-            <div class="input_button">`+ question.answers[0] + `</div>
-            <div class="input_button">`+ question.answers[1] + `</div>
-            <div class="input_button">`+ question.answers[2] + `</div>
-            <div class="input_button">`+ question.answers[3] + `</div>
+        `
+        Array.from(document.querySelector(".question_holder").children[document.querySelector(".question_holder").children.length - 1].querySelector(".question_input").children).forEach(element => {
+            if (Array.from(document.querySelector(".question_holder").children[document.querySelector(".question_holder").children.length - 1].querySelector(".question_input").children).indexOf(element) == question.rightAnswer) {
+                element.style.border = "1px solid green"
+            }
+            if (Array.from(document.querySelector(".question_holder").children[document.querySelector(".question_holder").children.length - 1].querySelector(".question_input").children).indexOf(element) == chosen) {
+                element.style.backgroundColor = "rgba(255, 0, 0, 0.404)"
+                element.style.color = "white"
+            }
+        })
+    }else if(question.answerType == 1){
+        document.querySelector(".question_holder").innerHTML +=
+            `                
+        <div class="question__element wrong">
+            <div class="question_title_holder">
+                <span class="question_title" id="questionTitle">`+ question.title + `</span>
+                <span class="question_subtitle" id="questionSubtitle">`+ question.subtitle + `</span>
+            </div>
+            <input type="text" class="input_text" placeholder=`+ "'"+question.rightAnswer+"'"+`>
         </div>
-    </div>
-    `
-    Array.from(document.querySelector(".question_holder").children[document.querySelector(".question_holder").children.length - 1].querySelector(".question_input").children).forEach(element => {
-        if (Array.from(document.querySelector(".question_holder").children[document.querySelector(".question_holder").children.length - 1].querySelector(".question_input").children).indexOf(element) == question.rightAnswer) {
-            element.style.border = "1px solid green"
-        }
-        if (Array.from(document.querySelector(".question_holder").children[document.querySelector(".question_holder").children.length - 1].querySelector(".question_input").children).indexOf(element) == chosen) {
-            element.style.backgroundColor = "rgba(255, 0, 0, 0.404)"
-            element.style.color = "white"
-        }
-    })
+        `
+        console.log(question.rightAnswer);
+    }
 
 }
 
@@ -116,22 +163,45 @@ let rightAnswers = 0
 
 
 initQuestions(questionList)
-setQuestion(questionList[0].title, questionList[0].subtitle, questionList[0].answers)
+setQuestion(questionList[0].title, questionList[0].subtitle, questionList[0].answers, questionList[0].answerType, questionList[0].imagePath)
 highliteQuestion(questionCounter)
 
 questionInput.addEventListener("click", (event) => {
-    console.log(questionCounter);
-    if (questionList[questionCounter].rightAnswer == Array.from(questionInput.children).indexOf(event.target)) {
-        rightAnswers++
-    } else {
-        wrongAnswers.push([questionList[questionCounter], Array.from(questionInput.children).indexOf(event.target)])
-    }
+    console.log(event.target.classList);
+    if (event.target.classList.contains("input_button")){
+        if (questionList[questionCounter].rightAnswer == Array.from(questionInput.children).indexOf(event.target)) {
+            rightAnswers++
+        } else {
+            wrongAnswers.push([questionList[questionCounter], Array.from(questionInput.children).indexOf(event.target)])
+        }
 
-    if (questionCounter == questionList.length - 1) {
-        finishQuestions(rightAnswers)
+        if (questionCounter == questionList.length - 1) {
+            finishQuestions(rightAnswers)
+        }
+        questionCounter++
+        questionCount.textContent = "Вопрос " + (questionCounter + 1) + " из " + questionList.length
+        setQuestion(questionList[questionCounter].title, questionList[questionCounter].subtitle, questionList[questionCounter].answers, questionList[questionCounter].answerType, questionList[questionCounter].imagePath) ? 1 : 1
+        highliteQuestion(questionCounter)
+    } 
+    
+    
+    
+    
+    else
+    if (event.target.classList.contains("submit_button")){
+        console.log(questionInput.querySelector(".input_text").value);
+        if (questionList[questionCounter].rightAnswer == questionInput.querySelector(".input_text").value) {
+            rightAnswers++
+        } else {
+            wrongAnswers.push([questionList[questionCounter], Array.from(questionInput.children).indexOf(event.target)])
+        }
+
+        if (questionCounter == questionList.length - 1) {
+            finishQuestions(rightAnswers)
+        }
+        questionCounter++
+        questionCount.textContent = "Вопрос " + (questionCounter + 1) + " из " + questionList.length
+        setQuestion(questionList[questionCounter].title, questionList[questionCounter].subtitle, questionList[questionCounter].answers, questionList[questionCounter].answerType, questionList[questionCounter].imagePath) ? 1 : 1
+        highliteQuestion(questionCounter)
     }
-    questionCounter++
-    questionCount.textContent = "Вопрос " + (questionCounter + 1) + " из " + questionList.length
-    setQuestion(questionList[questionCounter].title, questionList[questionCounter].subtitle, questionList[questionCounter].answers) ? 1 : 1
-    highliteQuestion(questionCounter)
 })
