@@ -62,23 +62,23 @@ function highliteQuestion(questionID, color, symbol) {
 function setQuestion(title, subtitle, answers, type, image) {
     questionInput.innerHTML = ``
 
-    if(image != undefined){
+    if (image != undefined) {
         questionInput.innerHTML +=
-        `
-        <img src="`+image+`" alt="" class="question__image">
+            `
+        <img src="`+ image + `" alt="" class="question__image">
         `
     }
 
-    if(type == 0){
+    if (type == 0) {
         answers.forEach(element => {
             questionInput.innerHTML +=
                 `
             <div class="input_button button">`+ element + `</div>
             `
         });
-    }else if(type == 1){
+    } else if (type == 1) {
         questionInput.innerHTML +=
-        `
+            `
         <input type="text" class="input_text" placeholder="Впишите сюда ваш ответ">
         <div class="submit_button button">Ответить</div>
         `
@@ -106,7 +106,7 @@ function initQuestions(questionList) {
 }
 
 function addWrongQuestions(question, chosen) {
-    if(question.answerType == 0){
+    if (question.answerType == 0) {
         document.querySelector(".question_holder").innerHTML +=
             `                
         <div class="question__element wrong">
@@ -131,7 +131,7 @@ function addWrongQuestions(question, chosen) {
                 element.style.color = "white"
             }
         })
-    }else if(question.answerType == 1){
+    } else if (question.answerType == 1) {
         document.querySelector(".question_holder").innerHTML +=
             `                
         <div class="question__element wrong">
@@ -139,7 +139,7 @@ function addWrongQuestions(question, chosen) {
                 <span class="question_title" id="questionTitle">`+ question.title + `</span>
                 <span class="question_subtitle" id="questionSubtitle">`+ question.subtitle + `</span>
             </div>
-            <input type="text" class="input_text" placeholder=`+ "'"+question.rightAnswer+"'"+`>
+            <input type="text" class="input_text" placeholder=`+ "'" + question.rightAnswer + "'" + `>
         </div>
         `
         console.log(question.rightAnswer);
@@ -168,32 +168,11 @@ highliteQuestion(questionCounter)
 
 questionInput.addEventListener("click", (event) => {
     console.log(event.target.classList);
-    if (event.target.classList.contains("input_button")){
-        if (questionList[questionCounter].rightAnswer == Array.from(questionInput.children).indexOf(event.target)) {
+    if (event.target.classList.contains("input_button")) {
+        if (questionList[questionCounter].rightAnswer == Array.from(questionInput.children).indexOf(event.target) - 1) {
             rightAnswers++
         } else {
-            wrongAnswers.push([questionList[questionCounter], Array.from(questionInput.children).indexOf(event.target)])
-        }
-
-        if (questionCounter == questionList.length - 1) {
-            finishQuestions(rightAnswers)
-        }
-        questionCounter++
-        questionCount.textContent = "Вопрос " + (questionCounter + 1) + " из " + questionList.length
-        setQuestion(questionList[questionCounter].title, questionList[questionCounter].subtitle, questionList[questionCounter].answers, questionList[questionCounter].answerType, questionList[questionCounter].imagePath) ? 1 : 1
-        highliteQuestion(questionCounter)
-    } 
-    
-    
-    
-    
-    else
-    if (event.target.classList.contains("submit_button")){
-        console.log(questionInput.querySelector(".input_text").value);
-        if (questionList[questionCounter].rightAnswer == questionInput.querySelector(".input_text").value) {
-            rightAnswers++
-        } else {
-            wrongAnswers.push([questionList[questionCounter], Array.from(questionInput.children).indexOf(event.target)])
+            wrongAnswers.push([questionList[questionCounter], Array.from(questionInput.children).indexOf(event.target) - 1])
         }
 
         if (questionCounter == questionList.length - 1) {
@@ -204,4 +183,25 @@ questionInput.addEventListener("click", (event) => {
         setQuestion(questionList[questionCounter].title, questionList[questionCounter].subtitle, questionList[questionCounter].answers, questionList[questionCounter].answerType, questionList[questionCounter].imagePath) ? 1 : 1
         highliteQuestion(questionCounter)
     }
+
+
+
+
+    else
+        if (event.target.classList.contains("submit_button")) {
+            console.log(questionInput.querySelector(".input_text").value);
+            if (questionList[questionCounter].rightAnswer == questionInput.querySelector(".input_text").value) {
+                rightAnswers++
+            } else {
+                wrongAnswers.push([questionList[questionCounter], Array.from(questionInput.children).indexOf(event.target)])
+            }
+
+            if (questionCounter == questionList.length - 1) {
+                finishQuestions(rightAnswers)
+            }
+            questionCounter++
+            questionCount.textContent = "Вопрос " + (questionCounter + 1) + " из " + questionList.length
+            setQuestion(questionList[questionCounter].title, questionList[questionCounter].subtitle, questionList[questionCounter].answers, questionList[questionCounter].answerType, questionList[questionCounter].imagePath) ? 1 : 1
+            highliteQuestion(questionCounter)
+        }
 })
